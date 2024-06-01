@@ -1,5 +1,6 @@
-const express = require("express");
 const business = await import("../business/stationBusiness");
+const express = require("express");
+const json = require("../data/data.json");
 const app = express();
 
 app.get("/getStation", (request, response) => {
@@ -7,8 +8,10 @@ app.get("/getStation", (request, response) => {
     const array = [];
     if(id) {        
         let station = null;
-        business.
-        array.push(objeto);
+        let {objeto, ok, count} = business.FindById(id);
+        if(ok) {
+            objeto.forEach(data => array.push(data));
+        }
     }
     else if(userId) {
         let stations = null;
@@ -39,4 +42,4 @@ app.post("/deleteStation", (request, response) => {
     response.send(retorno);
 });
 
-app.listen(8080);
+app.listen(json.port);

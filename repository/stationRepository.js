@@ -1,3 +1,7 @@
+/** Sql padrão para captura dos registros da tabela Estacao
+ * @param search parametro de comparação (descricao) capturados por texto 
+ * @param params parametros de comparação 
+*/
 let getAll = (search = "", ...params) => {
     const condicoes = [];    
     let stringBuilder = "SELECT A.* from ESTACAO A";
