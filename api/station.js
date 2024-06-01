@@ -1,11 +1,13 @@
 const express = require("express");
+const business = await import("../business/stationBusiness");
 const app = express();
 
 app.get("/getStation", (request, response) => {
-    const {id, userId} = request.query;
+    const { id, userId } = request.query;
     const array = [];
-    if(id) {
+    if(id) {        
         let station = null;
+        business.
         array.push(objeto);
     }
     else if(userId) {
