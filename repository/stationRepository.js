@@ -15,4 +15,9 @@ let getAll = (search = "", ...params) => {
 let getById = (id) => { 
     return GetAll("", {id:id});
 }
-export const GetAll = getAll, GetById = getById;
+let gravar = (objeto = {}) => {
+    if (Object.keys(objeto).length > 0) { 
+        let stringBuilder = "INSERT INTO ESTACAO () VALUES () ON DUPLICATE KEY UPDATE";
+    }
+}
+export const GetAll = getAll, GetById = getById, Gravar = gravar;

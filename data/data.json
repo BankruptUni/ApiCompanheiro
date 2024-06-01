@@ -1,0 +1,7 @@
+
+{        
+    "host": "mydb.com", 
+    "user":"myUser", 
+    "password": "myPassword",
+    "connectionLimit": 5  
+}

@@ -10,7 +10,7 @@ const pool = mariadb.createPool({
 /**Método de aquisição dos objetos do banco via Id
  * @param id Id da requisição
  */
-const findById = async function(id = NaN) {
+const findById = async(id = NaN) => {
     let conn;
     try { 
         let query = repository.GetAll();
@@ -28,3 +28,4 @@ const findById = async function(id = NaN) {
         throw exception;
     }
 }
+export const FindById = findById;
