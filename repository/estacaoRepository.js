@@ -17,11 +17,14 @@ let getAll = (search = "", ...params) => {
     return stringBuilder;
 }
 let getById = (id) => { 
-    return GetAll("", {id:id});
+    return GetAll("", { id: id });
 }
 let gravar = (objeto = {}) => {
-    if (Object.keys(objeto).length > 0) { 
-        let stringBuilder = "INSERT INTO ESTACAO () VALUES () ON DUPLICATE KEY UPDATE";
-    }
+    
+    let stringBuilder = `INSERT INTO ESTACAO (documento, nome, e_tipo_cliente, forma_pagamento, login, senha) 
+                         VALUES ('${documento}', '${nome}', ${e_tipo_cliente}, ${forma_pagamento}, '${login}', '${senha}')
+                         ON DUPLICATE KEY UPDATE usuario set documento = '${documento}', nome = '${nome}', e_tipo_cliente = ${e_tipo_cliente}, 
+                         forma_pagamento = ${forma_pagamento}, login = '${login}', senha = '${senha}';`;
+    
 }
 export const GetAll = getAll, GetById = getById, Gravar = gravar;

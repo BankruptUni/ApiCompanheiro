@@ -1,18 +1,9 @@
-const repository = await import("../repository/stationRepository");
-const maria = require("mariaDB");
-
-const json = require("../data/data.json");
-const pool = mariadb.createPool({
-    host: json.host, 
-    user:json.user, 
-    password: json.password,
-    connectionLimit:json.connectionLimit,
-});
+const repository = await import("../repository/estacaoRepository");
 
 /**Método de aquisição dos objetos do banco via Id
  * @param id Id da requisição
  */
-const findById = async(id = NaN) => {
+const findById = async(id = NaN, pool) => {
     let conn;
     try { 
         let query = repository.GetAll();
@@ -33,7 +24,7 @@ const findById = async(id = NaN) => {
 /** Método para gravação de registro na tabela Estacao
  * @param objeto Registro passado pela api
 */
-const gravar = async(objeto = {}) => {
+const gravar = async(objeto = {}, pool) => {
     let conn;
     try { 
         let query = repository.GetAll();
