@@ -1,4 +1,6 @@
 const repository = await import("../repository/usuarioRepository");
+const repoTrajeto = await import("../repository/trajetoRepository");
+const repoBicicleta = await import("../repository/bicicletaRepository");
 
 /**Método de aquisição dos objetos do banco via Id
  * @param id Id da requisição
@@ -63,4 +65,16 @@ const deleteById = (id = NaN) => {
         }
     }
 }
-export const FindById = findById, Gravar = gravar, Delete = deleteById;
+const getBicicletasByUsuario = (usuario = NaN) => {
+    let command;
+    repoBicicleta.GetByUsuario(usuario);
+};
+const getTrajetosByUsuario = (usuario = NaN) => {
+        let command;
+        repoTrajeto.GetByUsuario(usuario);
+};
+
+export const FindById = findById, Gravar = gravar, 
+             Delete = deleteById, 
+             GetBicicletasByUsuario = getBicicletasByUsuario,
+             GetTrajetosByUsuario = getTrajetosByUsuario;
