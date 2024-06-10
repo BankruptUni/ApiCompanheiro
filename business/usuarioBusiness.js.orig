@@ -65,6 +65,7 @@ const deleteById = (id = NaN) => {
         }
     }
 }
+<<<<<<< HEAD
 const getBicicletasByUsuario = (usuario = NaN) => {
     let command;
     repoBicicleta.GetByUsuario(usuario);
@@ -78,3 +79,9 @@ export const FindById = findById, Gravar = gravar,
              Delete = deleteById, 
              GetBicicletasByUsuario = getBicicletasByUsuario,
              GetTrajetosByUsuario = getTrajetosByUsuario;
+=======
+export const FindById = findById, Gravar = gravar, Delete = deleteById;const getBicicletasByUsuario = (usuario = NaN) => {
+    let command;
+    repoBicicleta.GetByUsuario(usuario);
+};
+>>>>>>> 1a80ee3b74543d9761f07e39b80dcd5c722b5818
