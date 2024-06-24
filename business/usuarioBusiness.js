@@ -1,14 +1,24 @@
-const repository = await import("../repository/usuarioRepository");
-const repoTrajeto = await import("../repository/trajetoRepository");
-const repoBicicleta = await import("../repository/bicicletaRepository");
+const repository = require("../repository/usuarioRepository.js");
+const repoTrajeto = require("../repository/trajetoRepository.js");
+const repoBicicleta = require("../repository/bicicletaRepository.js");
+const json = require("../data/data.json");
+const mariadb = require("mariadb");
+const pool = mariadb.createPool({
+    host: json.host, 
+    user:json.user, 
+    database:"ciclo_companheiro", 
+    password: json.password,
+    connectTimeout:json.connectTimeout,
+    connectionLimit:json.connectionLimit,
+});
 
 /**Método de aquisição dos objetos do banco via Id
  * @param id Id da requisição
  */
-const findById = async(id = NaN, pool) => {
+const findById = async(id = NaN) => {
     let conn;
     try { 
-        let query = repository.GetAll();
+        let query = repository.getAll();
         conn = await pool.getConnection();
 
         const rows = await conn.query(query);
@@ -28,7 +38,7 @@ const findById = async(id = NaN, pool) => {
 /** Método para gravação de registro na tabela Estacao
  * @param objeto Registro passado pela api
 */
-const gravar = async(objeto = {}, pool) => {
+const gravar = async(objeto = {}) => {
     let conn;
     let retorno = {
         ok: false, 
@@ -37,7 +47,7 @@ const gravar = async(objeto = {}, pool) => {
     };
     try {
         if (Object.keys(objeto).length > 0) {
-            let command = repository.Gravar(objeto);
+            let command = repository.gravar(objeto);
             conn = await pool.getConnection();
     
             const rows = await conn.query(command);            
@@ -57,7 +67,7 @@ const gravar = async(objeto = {}, pool) => {
 const deleteById = (id = NaN) => {
     let conn;
     try{
-        let command = repository.Delete(id);
+        let command = repository.remove(id);
     }
     catch(exception) {
         if(conn) {
@@ -67,14 +77,16 @@ const deleteById = (id = NaN) => {
 }
 const getBicicletasByUsuario = (usuario = NaN) => {
     let command;
-    repoBicicleta.GetByUsuario(usuario);
+    repoBicicleta.getByUsuario(usuario);
 };
 const getTrajetosByUsuario = (usuario = NaN) => {
         let command;
-        repoTrajeto.GetByUsuario(usuario);
+        repoTrajeto.getByUsuario(usuario);
 };
-
-export const FindById = findById, Gravar = gravar, 
-             Delete = deleteById, 
-             GetBicicletasByUsuario = getBicicletasByUsuario,
-             GetTrajetosByUsuario = getTrajetosByUsuario;
+module.exports = {
+    findById,
+    gravar,
+    deleteById,
+    getBicicletasByUsuario,
+    getTrajetosByUsuario
+};                         

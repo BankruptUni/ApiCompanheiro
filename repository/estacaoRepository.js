@@ -27,4 +27,8 @@ let gravar = (objeto = {}) => {
                          forma_pagamento = ${forma_pagamento}, login = '${login}', senha = '${senha}';`;
     
 }
-export const GetAll = getAll, GetById = getById, Gravar = gravar;
+module.exports = {
+    getAll,
+    getById,
+    gravar
+};

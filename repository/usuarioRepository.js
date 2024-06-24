@@ -37,4 +37,9 @@ let remove = (id) => {
     let stringBuilder = `DELETE FROM USUARIO WHERE ID = '${id}'`;
     return stringBuilder;
 }
-export const GetAll = getAll, GetById = getById, Gravar = gravar, Delete = remove;
+module.exports = {
+    getAll,
+    getById,
+    gravar,
+    remove
+};

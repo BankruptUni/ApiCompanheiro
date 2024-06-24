@@ -1,33 +1,32 @@
-const stationBusiness = await import("../business/estacaoBusiness");
-const usuarioBusiness = await import("../business/usuarioBusiness");
+const stationBusiness = require("../business/estacaoBusiness.js");
+const usuarioBusiness = require("../business/usuarioBusiness.js");
 const express = require("express");
 const json = require("../data/data.json");
-const mariadb = require("mariadb");
-const pool = mariadb.createPool({
-    host: json.host, 
-    user:json.user, 
-    password: json.password,
-    connectionLimit:json.connectionLimit,
-});
 const app = express();
+app.use(express.json())
 
-app.get("/getEstacao", (request, response) => {
+app.get("/getEstacao", async(request, response) => {
     const { id, userId } = request.query;
     const array = [];
-    if(id) {        
-        let station = null;
-        let {objeto, ok, count} = stationBusiness.FindById(id, pool);
-        if(ok) {
-            objeto.forEach(data => array.push(data));
+    try {
+        if(id) {        
+            let station = null;
+            let {objeto, ok, count} = await stationBusiness.findById(pool, id);
+            if(ok) {
+                objeto.forEach(data => array.push(data));
+            }
         }
-    }
-    else if(userId) {
-        let stations = null;
-        for(let station of stations) {
-            array.push(station);
+        else if(userId) {
+            let {objeto, ok, count} = await stationBusiness.findById(pool, null, userId);
+            for(let station of stations) {
+                array.push(station);
+            }
         }
+        response.json(array);   
     }
-    response.send(array);
+    catch(exception) {
+
+    }    
 });
 
 app.post("/gravarEstacao", (request, response) => {
@@ -35,7 +34,7 @@ app.post("/gravarEstacao", (request, response) => {
     const array = [];
     if(id) {        
         let station = null;
-        let {objeto, ok, count} = stationBusiness.Gravar(id);
+        let {objeto, ok, count} = stationBusiness.gravar(id);
         if(ok) {
             objeto.forEach(data => array.push(data));
         }
@@ -46,7 +45,7 @@ app.post("/gravarEstacao", (request, response) => {
             array.push(station);
         }
     }
-    response.send(array);
+    response.json(array);
 });
 
 app.post("/deleteEstacao", (request, response) => {
@@ -66,26 +65,21 @@ app.post("/deleteEstacao", (request, response) => {
             array.push(station);
         }
     }
-    response.send(retorno);
+    response.json(retorno);
 });
 
 app.get("/getUsuario", (request, response) => {
     const { id, userId } = request.query;
-    const array = [];
+    let retorno = null;
     if(id) {        
         let station = null;
-        let {objeto, ok, count} = usuarioBusiness.FindById(id);
-        if(ok) {
+        retorno = usuarioBusiness.findById(id);
+        if(retorno.ok) {
             objeto.forEach(data => array.push(data));
         }
     }
-    else if(userId) {
-        let stations = null;
-        for(let station of stations) {
-            array.push(station);
-        }
-    }
-    response.send(array);
+    
+    response.json(retorno);
 });
 
 app.post("/gravarUsuario", (request, response) => {
@@ -93,7 +87,7 @@ app.post("/gravarUsuario", (request, response) => {
     const array = [];
     if(id) {        
         let station = null;
-        let {objeto, ok, count} = usuarioBusiness.FindById(id);
+        let {objeto, ok, count} = usuarioBusiness.findById(id);
         if(ok) {
             objeto.forEach(data => array.push(data));
         }
@@ -104,13 +98,14 @@ app.post("/gravarUsuario", (request, response) => {
             array.push(station);
         }
     }
-    response.send(array);
+    response.json(array);
 });
 
 app.post("/deleteUsuario", (request, response) => {
     const id = request.body.id;
     const retorno = {
-        ok:false, 
+        ok:false,
+        message:"", 
         objeto:id
     };
     
@@ -124,7 +119,7 @@ app.post("/deleteUsuario", (request, response) => {
             array.push(station);
         }
     }
-    response.send(retorno);
+    response.json(retorno);
 });
 
 app.listen(json.api_port);

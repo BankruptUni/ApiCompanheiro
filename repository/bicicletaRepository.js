@@ -19,6 +19,9 @@ let getAll = (search = "", ...params) => {
 let getByUsuario = (usuario) => { 
     return GetAll("", { usuario_id: usuario });
 }
+let getByEstacao = (estacao) => { 
+    return GetAll("", { estacao_id: estacao });
+}
 let gravar = (objeto = {usuario_id: NaN, lugares: 0}) => {    
     let stringBuilder = `INSERT INTO BICICLETA (usuario_id, lugares, descricao) 
                          VALUES (${usuario_id}, ${lugares}, '${descricao}')
@@ -31,4 +34,11 @@ let remove = (id) => {
     let stringBuilder = `DELETE FROM bicicleta WHERE ID = '${id}'`;
     return stringBuilder;
 }
-export const GetAll = getAll, GetByUsuario = getByUsuario, Gravar = gravar, Remove = remove;
+
+module.exports = {
+    getAll,
+    getByUsuario,
+    getByEstacao,
+    gravar,
+    remove
+};                   

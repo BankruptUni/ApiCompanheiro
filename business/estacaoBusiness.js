@@ -1,11 +1,21 @@
-const repository = await import("../repository/estacaoRepository");
-const repoBicicleta = await import("../repository/bicicletaRepository");
-const repoVaga = await import("../repository/vagaRepository");
+const repository = require("../repository/estacaoRepository.js");
+const repoBicicleta = require("../repository/bicicletaRepository.js");
+const repoVaga = require("../repository/vagaRepository.js");
+const json = require("../data/data.json");
+const mariadb = require("mariadb");
+const pool = mariadb.createPool({
+    host: json.host, 
+    user:json.user,
+    database:"ciclo_companheiro", 
+    password: json.password,
+    connectTimeout:json.connectTimeout,
+    connectionLimit:json.connectionLimit,
+});
 
 /**Método de aquisição dos objetos do banco via Id
  * @param id Id da requisição
  */
-const findById = async(id = NaN, pool) => {
+const findById = async(id = NaN, userId = NaN) => {
     let conn;
     let retorno = 
         {
@@ -14,16 +24,21 @@ const findById = async(id = NaN, pool) => {
             count:0
         };
     try { 
-        let query = repository.GetAll();
+        let query = repository.getAll();
         conn = await pool.getConnection();
 
         const rows = await conn.query(query);
         for(let record of retorno.objeto) {
-            reporecord.id
+            
+            let bicicletas = conn.query(repoBicicleta.getByEstacao(record.id));
+            let vagas = conn.query(repoVaga.getByEstacao(record.id));
+            
+            record.bicicletas = bicicletas?? [];
+            record.vagas = vagas?? [];            
+
         }
-        return {
-            ok: false, objeto: rows, count:0
-        };
+        retorno.ok = true;
+        return retorno;
     }
     catch(exception) { 
         if(conn) {
@@ -35,10 +50,10 @@ const findById = async(id = NaN, pool) => {
 /** Método para gravação de registro na tabela Estacao
  * @param objeto Registro passado pela api
 */
-const gravar = async(objeto = {}, pool) => {
+const gravar = async(objeto = {}) => {
     let conn;
     try { 
-        let query = repository.GetAll();
+        let query = repository.getAll();
         conn = await pool.getConnection();
 
         const rows = await conn.query(query);
@@ -53,4 +68,8 @@ const gravar = async(objeto = {}, pool) => {
         throw exception;
     }
 }
-export const FindById = findById, Gravar = gravar;
+module.exports = {
+    findById, 
+    gravar
+};
+

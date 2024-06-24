@@ -1,7 +1,10 @@
 
 {        
-    "host": "mydb.com", 
-    "user":"myUser", 
-    "password": "myPassword",
-    "connectionLimit": 5  
+    "host" : "localhost",        
+    "user" : "root",        
+    "password" : "masterkey",        
+    "connectionLimit" : 5,
+    "port" : 3306,
+    "connectTimeout":8000,
+    "api_port" : 7561
 }

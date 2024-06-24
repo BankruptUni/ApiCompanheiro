@@ -17,7 +17,7 @@ let getAll = (search = "", ...params) => {
     return stringBuilder;
 }
 
-let getVagasByEstacao = (estacao) => { 
+let getByEstacao = (estacao) => { 
     return GetAll("", { estacao_id: estacao });
 }
 
@@ -34,4 +34,9 @@ let remove = (id) => {
     let stringBuilder = `DELETE FROM vaga WHERE ID = '${id}'`;
     return stringBuilder;
 }
-export const GetAll = getAll, GetVagasByEstacao = getVagasByEstacao, Gravar = gravar, Delete = remove;
+module.exports = {
+    getAll,
+    getByEstacao,
+   gravar,
+   remove
+};

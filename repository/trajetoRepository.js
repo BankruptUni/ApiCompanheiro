@@ -34,4 +34,9 @@ let remove = (id) => {
     let stringBuilder = `DELETE FROM trajeto WHERE ID = '${id}'`;
     return stringBuilder;
 }
-export const GetAll = getAll, GetByUsuario = getByUsuario, Gravar = gravar, Delete = remove;
+module.exports = {
+    getAll,
+    getByUsuario,
+    gravar,
+    remove
+};
