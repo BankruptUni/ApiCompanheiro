@@ -2,18 +2,28 @@
  * @param search parametro de comparação (descricao) capturados por texto 
  * @param params parametros de comparação 
 */
-let getAll = (search = "", ...params) => {
+let getAll = (search = "", params = [{}]) => {
     const condicoes = [];    
-    let stringBuilder = "SELECT A.id,A.nome,A.documento,A.e_tipo_cliente,A.forma_pagamento from USUARIO A";
+    let stringBuilder = "SELECT A.id, A.nome, A.documento, A.e_tipo_cliente, A.forma_pagamento from USUARIO A";
     if(search || params.length > 0) {
-        stringBuilder += "WHERE";     
-    }
-    for(let { key, value } of params) {        
-        condicoes.push(`${key} = ${value}`);
-    }
-    condicoes.forEach(function(condicao) {
-        stringBuilder += condicao;
-    });
+        stringBuilder += " WHERE ";
+
+        for(let obj of params) {
+        
+            if(obj.senha){
+                condicoes.push(` AES_Decrypt(senha, 'ciclo_usuario', '0123456789abcdef', 'aes-256-cbc') like ${obj.senha}`);
+            }   
+            else if(obj.login) {
+                condicoes.push(` login = ${obj.login} `);
+            }     
+        }
+        for(let index = 0; index < condicoes.length;) {
+            stringBuilder += condicoes[index++];
+            if(index != condicoes.length){
+                stringBuilder += " and ";
+            }
+        }
+    }    
     return stringBuilder;
 }
 

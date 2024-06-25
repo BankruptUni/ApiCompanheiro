@@ -1,10 +1,16 @@
 const stationBusiness = require("../business/estacaoBusiness.js");
 const usuarioBusiness = require("../business/usuarioBusiness.js");
+const fs = require("fs");
+const https = require("https");
 const express = require("express");
 const json = require("../data/data.json");
 const app = express();
 app.use(express.json())
 
+const options = {
+    key: fs.readFileSync("../data/localhost-key.pem"),
+    cert: fs.readFileSync("../data/localhost.pem"),
+}
 app.get("/getEstacao", async(request, response) => {
     const { id, userId } = request.query;
     const array = [];
@@ -29,7 +35,7 @@ app.get("/getEstacao", async(request, response) => {
     }    
 });
 
-app.post("/gravarEstacao", (request, response) => {
+app.post("/gravarEstacao", async(request, response) => {
     const { id, userId } = request.query;
     const array = [];
     if(id) {        
@@ -48,7 +54,7 @@ app.post("/gravarEstacao", (request, response) => {
     response.json(array);
 });
 
-app.post("/deleteEstacao", (request, response) => {
+app.post("/deleteEstacao", async(request, response) => {
     const id = request.body.id;
     const retorno = {
         ok:false, 
@@ -68,21 +74,34 @@ app.post("/deleteEstacao", (request, response) => {
     response.json(retorno);
 });
 
-app.get("/getUsuario", (request, response) => {
+app.get("/getUsuario", async(request, response) => {
     const { id, userId } = request.query;
     let retorno = null;
     if(id) {        
         let station = null;
-        retorno = usuarioBusiness.findById(id);
+        retorno = await usuarioBusiness.findById(id);
         if(retorno.ok) {
-            objeto.forEach(data => array.push(data));
+            //objeto.forEach(data => array.push(data));
         }
     }
     
     response.json(retorno);
 });
 
-app.post("/gravarUsuario", (request, response) => {
+app.post("/getLogin", async(request, response) => {
+    const { login, senha } = request.body;
+    let retorno = null;
+    if(login && senha) {                
+        retorno = await usuarioBusiness.getLogin(login, senha);
+        if(retorno.ok) {
+            //objeto.forEach(data => array.push(data));
+        }
+    }
+    
+    response.json(retorno);
+});
+
+app.post("/gravarUsuario", async(request, response) => {
     const { id, userId } = request.query;
     const array = [];
     if(id) {        
@@ -121,5 +140,5 @@ app.post("/deleteUsuario", (request, response) => {
     }
     response.json(retorno);
 });
-
-app.listen(json.api_port);
+const server = https.createServer(options, app);
+server.listen(json.api_port);

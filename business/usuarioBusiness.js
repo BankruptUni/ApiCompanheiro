@@ -35,6 +35,31 @@ const findById = async(id = NaN) => {
         throw exception;
     }
 }
+/**Método de verificação de Login
+ * @param login Login do Usuário
+ * @param password Senha do Usuário
+ */
+const getLogin = async(login = "", senha = "") => {
+    let conn;
+    try { 
+        let query = repository.getAll("", [{login:login}, {senha:senha}]);
+        conn = await pool.getConnection();
+
+        const rows = await conn.query(query);
+        return {
+            ok: rows.length > 0? true : false,
+            objeto: rows, 
+            count: 0
+        };
+    }
+    catch(exception) { 
+        if(conn) {
+            conn.end;
+        }
+        throw exception;
+    }
+
+}
 /** Método para gravação de registro na tabela Estacao
  * @param objeto Registro passado pela api
 */
@@ -88,5 +113,6 @@ module.exports = {
     gravar,
     deleteById,
     getBicicletasByUsuario,
-    getTrajetosByUsuario
+    getTrajetosByUsuario,
+    getLogin
 };                         
